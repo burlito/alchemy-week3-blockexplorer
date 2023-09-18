@@ -1,38 +1,23 @@
-import { Alchemy, Network } from 'alchemy-sdk';
-import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import { LatestBlock, BlockFromRouter} from './components/Block';
+import { TransactionFromRouter } from './components/Transactions';
+import { WalletFromRouter } from './components/Wallet';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import BlockInfo from './components/BlockInfo';
-
-import './App.css';
-
-const settings = {
-  apiKey: process.env.REACT_APP_ALCHEMY_API_KEY,
-  network: Network.ETH_MAINNET,
-};
-
-
-const alchemy = new Alchemy(settings);
+//import './App.css';
 
 function App() {
-  const [blockNumber, setBlockNumber] = useState();
-
-  useEffect(() => {
-    async function getBlockNumber() {
-        setBlockNumber(await alchemy.core.getBlockNumber());
-        console.log("Fetching block number");
-    }
-
-    getBlockNumber();
-  }, []);
-
     return (
-        <>
-            <div className="App">
-                Block Number: {blockNumber}
-            </div>
-            <BlockInfo blockNumber={blockNumber} />
-        </>
+        <Router>
+            <Routes>
+                <Route path="/" element={<LatestBlock />} />
+                <Route path="block/:blockNumber" element={<BlockFromRouter />} />
+                <Route path="transaction/:transactionHash" element={<TransactionFromRouter />} />
+                <Route path="wallet/:walletHash" element={<WalletFromRouter />} />
+            </Routes>
+        </Router>
     );
 }
+
 
 export default App;
